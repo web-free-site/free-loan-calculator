@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Free Loan Calculator — amortization schedule, extra payments, CSV &amp; PDF</title>
+<meta name="description" content="Free client-side loan calculator: enter amount, rate and term. Monthly payment, full amortization table, extra payments, CSV and PDF export. Not financial advice.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0f766e" id="themeColor">
+<link rel="canonical" href="https://free-loan-calculator.web-free.site/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Free Loan Calculator">
+<meta property="og:title" content="Free Loan Calculator — amortization schedule, extra payments, CSV &amp; PDF">
+<meta property="og:description" content="Enter your own loan amount, interest rate and term. Full schedule in your browser.">
+<meta property="og:url" content="https://free-loan-calculator.web-free.site/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Free Loan Calculator">
+<meta name="twitter:description" content="Client-side loan payment and amortization calculator with CSV and PDF export.">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Free Loan Calculator","applicationCategory":"FinanceApplication","operatingSystem":"Any modern browser","description":"Calculate monthly loan payments, total interest, payoff date and a full amortization schedule with optional extra payments.","url":"https://free-loan-calculator.web-free.site/","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"web-free.site","url":"https://web-free.site/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I calculate a loan payment?","acceptedAnswer":{"@type":"Answer","text":"Enter the loan principal, annual interest rate as a percentage, and the term in years or months. The calculator uses a standard level-payment amortization formula."}},{"@type":"Question","name":"Do you store my loan numbers?","acceptedAnswer":{"@type":"Answer","text":"No. Calculations run entirely in your browser. Only theme and currency label preferences may be saved locally on your device."}},{"@type":"Question","name":"Can I add extra monthly payments?","acceptedAnswer":{"@type":"Answer","text":"Yes. Enter an optional extra amount applied each month after the regular payment to see a shorter payoff and less total interest."}},{"@type":"Question","name":"Is this financial advice?","acceptedAnswer":{"@type":"Answer","text":"No. Results are estimates for planning. Lenders may use different rounding, fees or day-count rules. Confirm figures with your creditor."}}]}</script>
+</head>
+<body>
+<header class="site-nav">
+  <a class="brand" href="/">Free Loan Calculator</a>
+  <nav aria-label="Site">
+    <a href="/about">About</a>
+    <a href="/how-to-calculate-a-loan-payment-from-your-salary">Salary &amp; loans</a>
+    <a href="/how-to-use-a-car-loan-calculator-with-extra-payments">Car loans</a>
+    <a href="/how-to-read-a-mortgage-amortization-schedule">Mortgage schedule</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="ad-slot" aria-label="Advertisement">
+    <div class="ad-slot__label">Advertisement</div>
+    <div data-ad-slot="top728x90"></div>
+  </div>
+
+  <div class="page-layout">
+    <div class="page-main">
+      <header class="tool-header">
+        <div>
+          <h1>Free loan &amp; amortization calculator</h1>
+          <p>Enter your own loan amount, annual interest rate, and term. Monthly payment, total interest, and a full repayment schedule stay in this browser.</p>
+        </div>
+        <div class="controls">
+          <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle light/dark theme">🌙</button>
+        </div>
+      </header>
+
+      <div class="disclaimer-box" role="note">
+        <strong>Estimate only — not financial advice.</strong> You must enter every figure yourself; we do not show bank or market rates. Confirm the final schedule, fees, and insurance with your lender.
+      </div>
+
+      <main class="grid">
+        <section class="card" aria-labelledby="formTitle">
+          <h2 id="formTitle">Loan details</h2>
+          <form id="loanForm" novalidate onsubmit="return false">
+            <div class="field">
+              <label for="amount">Loan amount</label>
+              <input id="amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="e.g. 25000" required>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="rate">Annual interest rate (%)</label>
+                <input id="rate" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="e.g. 6.5" required>
+              </div>
+              <div class="field">
+                <label for="currency">Currency label (display only)</label>
+                <select id="currency">
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="RWF">RWF</option>
+                  <option value="CDF">CDF</option>
+                  <option value="XOF">XOF (FCFA)</option>
+                  <option value="XAF">XAF (FCFA)</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="termValue">Loan term</label>
+                <input id="termValue" type="number" inputmode="numeric" min="1" step="1" placeholder="e.g. 5" required>
+              </div>
+              <div class="field">
+                <label class="sr-only" for="termUnit">Term unit</label>
+                <select id="termUnit">
+                  <option value="years">years</option>
+                  <option value="months">months</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="start">Start date</label>
+              <input id="start" type="date">
+              <div class="hint">The first payment is due one month after this date.</div>
+            </div>
+            <div class="field">
+              <label for="extra">Extra monthly payment (optional)</label>
+              <input id="extra" type="number" inputmode="decimal" min="0" step="0.01" value="0">
+            </div>
+            <div class="field">
+              <label for="fee">One-time fees (optional)</label>
+              <input id="fee" type="number" inputmode="decimal" min="0" step="0.01" value="0">
+            </div>
+            <p class="error" id="formError" role="alert"></p>
+            <div class="actions">
+              <button class="btn" id="resetBtn" type="button">Clear fields</button>
+            </div>
+          </form>
+        </section>
+
+        <section aria-live="polite" aria-labelledby="resultsTitle">
+          <div class="card">
+            <h2 id="resultsTitle">Results</h2>
+            <div class="metrics">
+              <div class="metric hero"><div class="k">Monthly payment</div><div class="v" id="outMonthly">–</div></div>
+              <div class="metric"><div class="k">Total interest</div><div class="v" id="outInterest">–</div></div>
+              <div class="metric"><div class="k">Total repaid</div><div class="v" id="outPaid">–</div></div>
+              <div class="metric"><div class="k">Total cost (incl. fees)</div><div class="v" id="outCost">–</div></div>
+              <div class="metric"><div class="k">Final payment date</div><div class="v" id="outPayoff">–</div></div>
+              <div class="metric"><div class="k">Number of payments</div><div class="v" id="outCount">–</div></div>
+            </div>
+            <p class="saving" id="outSaving">Add an extra payment to see savings.</p>
+            <div class="actions">
+              <button class="btn" id="copyBtn" type="button">Copy summary</button>
+              <button class="btn primary" id="csvBtn" type="button">Download CSV</button>
+              <button class="btn primary" id="pdfBtn" type="button">Print / save PDF</button>
+            </div>
+            <p class="status" id="status" role="status"></p>
+          </div>
+
+          <div class="ad-slot" aria-label="Advertisement">
+            <div class="ad-slot__label">Advertisement</div>
+            <div data-ad-slot="content468x60"></div>
+          </div>
+
+          <div class="card" style="margin-top:16px">
+            <h2>Remaining balance</h2>
+            <svg class="chart" id="chart" viewBox="0 0 640 260" role="img" aria-label="Remaining balance chart">
+              <line x1="48" y1="210" x2="630" y2="210" stroke="currentColor" opacity=".25"></line>
+              <line x1="48" y1="10" x2="48" y2="210" stroke="currentColor" opacity=".25"></line>
+              <polyline id="lineBase" class="base" points=""></polyline>
+              <polyline id="lineNow" class="now" points=""></polyline>
+              <text id="chartMax" x="52" y="22"></text>
+              <text id="chartEnd" x="630" y="232" text-anchor="end"></text>
+            </svg>
+            <div class="legend"><span>With your payments</span><span class="b">Without extra payments</span></div>
+          </div>
+
+          <div class="ad-slot" aria-label="Advertisement">
+            <div class="ad-slot__label">Advertisement</div>
+            <div data-ad-slot="mid728x90"></div>
+          </div>
+
+          <div class="ad-slot" aria-label="Advertisement">
+            <div class="ad-slot__label">Advertisement</div>
+            <div data-ad-slot="nativeMid"></div>
+          </div>
+
+          <div class="card" style="margin-top:16px">
+            <h2>Repayment schedule</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No.</th><th>Date</th><th>Payment</th><th>Extra</th><th>Principal</th><th>Interest</th><th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="ad-slot" aria-label="Advertisement">
+            <div class="ad-slot__label">Advertisement</div>
+            <div data-ad-slot="content300x250"></div>
+          </div>
+        </section>
+      </main>
+
+      <section class="faq card" aria-labelledby="faqTitle">
+        <h2 id="faqTitle">Frequently asked questions</h2>
+        <details><summary>How do I calculate a loan payment?</summary><p>Enter principal, annual rate (%), and term. The tool uses standard fixed-rate level payments.</p></details>
+        <details><summary>Are currency labels converted?</summary><p>No. RWF, CDF, FCFA, EUR, and USD labels only change how amounts are formatted—not exchange rates.</p></details>
+        <details><summary>Is my data uploaded?</summary><p>No. Everything runs locally in your browser.</p></details>
+      </section>
+
+      <p class="ad-smartlink" data-smartlink></p>
+
+      <footer class="foot">
+        <p>Estimates only. Not financial, tax, or legal advice. Lenders may round differently or add insurance and fees.</p>
+        <nav aria-label="Footer">
+          <a href="/terms">Terms</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/about">About</a>
+          <a href="https://web-free.site/">More free tools at web-free.site</a>
+        </nav>
+        <p>Calculator core derived from <a href="https://github.com/TekiDeki/Loan-Calculator">TekiDeki/Loan-Calculator</a> (Apache-2.0). See <a href="/about">About</a> for attribution.</p>
+      </footer>
+    </div>
+
+    <aside class="ad-rail" aria-label="Sidebar advertisements">
+      <div class="ad-slot">
+        <div class="ad-slot__label">Advertisement</div>
+        <div data-ad-slot="sidebar160x600"></div>
+      </div>
+      <div class="ad-slot" style="margin-top:16px">
+        <div class="ad-slot__label">Advertisement</div>
+        <div data-ad-slot="sidebar160x300"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="ad-sticky-mobile" aria-label="Advertisement">
+  <div data-ad-slot="mobileSticky320x50"></div>
+</div>
+
+<div id="printArea" hidden></div>
+
+<script>
+/* CORE:BEGIN (pure calculation, no DOM; covered by tests/loan.test.cjs) */
+const toCents = v => Math.round(v * 100);
+function levelPaymentCents(principalCents, monthlyRate, n) {
+  if (monthlyRate === 0) return Math.ceil(principalCents / n);
+  const f = Math.pow(1 + monthlyRate, n);
+  return Math.round(principalCents * monthlyRate * f / (f - 1));
+}
+function addMonths(date, k) {
+  const target = new Date(date.getFullYear(), date.getMonth() + k, 1);
+  const last = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+  return new Date(target.getFullYear(), target.getMonth(), Math.min(date.getDate(), last));
+}
+function buildSchedule({ principal, annualRatePct, months, extra = 0 }) {
+  const P = toCents(principal);
+  const r = annualRatePct / 100 / 12;
+  const pay = levelPaymentCents(P, r, months);
+  const extraCents = toCents(extra);
+  const rows = [];
+  let balance = P, k = 0;
+  let totalPaid = 0, totalInterest = 0, totalExtra = 0;
+  while (balance > 0 && k < months) {
+    k++;
+    const interest = Math.round(balance * r);
+    let principalPart = Math.min(pay - interest, balance);
+    if (k === months) principalPart = balance;
+    const ex = Math.min(extraCents, balance - principalPart);
+    balance = balance - principalPart - ex;
+    const payment = principalPart + interest;
+    totalPaid += payment + ex;
+    totalInterest += interest;
+    totalExtra += ex;
+    rows.push({ n: k, payment, extra: ex, interest, principal: principalPart, balance });
+  }
+  return { paymentCents: pay, rows, count: rows.length, totalPaidCents: totalPaid, totalInterestCents: totalInterest, totalExtraCents: totalExtra };
+}
+function csvEscape(value) {
+  const s = String(value);
+  return /[",\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function formatIsoDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+function scheduleToCsv(schedule, startDate) {
+  const header = ['No', 'Date', 'Payment', 'Extra', 'Principal', 'Interest', 'Balance'];
+  const lines = [header.join(',')];
+  schedule.rows.forEach(row => {
+    const date = addMonths(startDate, row.n);
+    lines.push([
+      row.n,
+      formatIsoDate(date),
+      (row.payment / 100).toFixed(2),
+      (row.extra / 100).toFixed(2),
+      (row.principal / 100).toFixed(2),
+      (row.interest / 100).toFixed(2),
+      (row.balance / 100).toFixed(2),
+    ].map(csvEscape).join(','));
+  });
+  return lines.join('\n') + '\n';
+}
+function buildPrintDocument(meta) {
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const rows = meta.rows.map(r => `<tr><td>${r.n}</td><td>${esc(r.date)}</td><td>${esc(r.payment)}</td><td>${esc(r.extra)}</td><td>${esc(r.principal)}</td><td>${esc(r.interest)}</td><td>${esc(r.balance)}</td></tr>`).join('');
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(meta.title)}</title>
+<style>body{font:12px/1.4 system-ui,sans-serif;color:#111;margin:16px}h1{font-size:18px}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid #ccc;padding:4px 6px;text-align:right}th,td:nth-child(1),td:nth-child(2){text-align:left}th{background:#f4f4f4}.meta{margin:8px 0}.note{font-size:11px;color:#444;margin-top:14px}</style></head><body>
+<h1>${esc(meta.title)}</h1>
+<div class="meta">${meta.summaryLines.map(l => `<div>${esc(l)}</div>`).join('')}</div>
+<table><thead><tr><th>No.</th><th>Date</th><th>Payment</th><th>Extra</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table>
+<p class="note">Estimate only — not financial advice. Generated by Free Loan Calculator.</p>
+</body></html>`;
+}
+/* CORE:END */
+
+const LOCALE = 'en-US';
+const KEY = 'flc_prefs_v1';
+const CURRENCIES = ['USD', 'EUR', 'RWF', 'CDF', 'XOF', 'XAF'];
+const state = { theme: 'light', currency: 'USD' };
+const $ = id => document.getElementById(id);
+let lastSummary = null;
+
+function money(valueMajor) {
+  return new Intl.NumberFormat(LOCALE, { style: 'currency', currency: state.currency }).format(valueMajor);
+}
+function dateLong(date) {
+  return new Intl.DateTimeFormat(LOCALE, { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
+}
+function isoDate(date) {
+  return formatIsoDate(date);
+}
+function parseIsoDate(value) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '');
+  if (!m) return null;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return d.getFullYear() === Number(m[1]) && d.getMonth() === Number(m[2]) - 1 ? d : null;
+}
+
+function readInputs() {
+  const errors = [];
+  const amount = Number($('amount').value);
+  const rate = Number($('rate').value);
+  const termValue = Number($('termValue').value);
+  const unit = $('termUnit').value;
+  const start = parseIsoDate($('start').value);
+  const extra = Number($('extra').value || 0);
+  const fee = Number($('fee').value || 0);
+  if (!(amount > 0) || amount > 1e12) errors.push('Enter a loan amount greater than zero.');
+  if ($('rate').value === '' || !(rate >= 0 && rate <= 100)) errors.push('Enter an interest rate between 0 and 100.');
+  const months = unit === 'years' ? Math.round(termValue * 12) : Math.round(termValue);
+  if (!(termValue > 0) || months < 1 || months > 600) errors.push('Enter a term between 1 and 600 months (1 to 50 years).');
+  if (!start) errors.push('Enter a valid start date.');
+  if (!(extra >= 0) || !(fee >= 0)) errors.push('Extra payments and fees cannot be negative.');
+  return { errors, amount, rate, months, start, extra, fee };
+}
+
+function setStatus(message, isError = false) {
+  $('status').textContent = message;
+  $('status').classList.toggle('error', isError);
+}
+
+function clearResults() {
+  ['outMonthly', 'outInterest', 'outPaid', 'outCost', 'outPayoff', 'outCount'].forEach(id => { $(id).textContent = '–'; });
+  $('outSaving').textContent = 'Add an extra payment to see savings.';
+  $('scheduleBody').replaceChildren();
+  $('lineNow').setAttribute('points', '');
+  $('lineBase').setAttribute('points', '');
+  $('chartMax').textContent = '';
+  $('chartEnd').textContent = '';
+}
+
+function recalc() {
+  const v = readInputs();
+  if (v.errors.length) {
+    $('formError').textContent = v.errors[0];
+    lastSummary = null;
+    clearResults();
+    return;
+  }
+  $('formError').textContent = '';
+  const base = buildSchedule({ principal: v.amount, annualRatePct: v.rate, months: v.months, extra: 0 });
+  const now = buildSchedule({ principal: v.amount, annualRatePct: v.rate, months: v.months, extra: v.extra });
+  const payoff = addMonths(v.start, now.count);
+  lastSummary = {
+    principal: v.amount,
+    rate: v.rate,
+    monthly: base.paymentCents / 100,
+    interest: now.totalInterestCents / 100,
+    paid: now.totalPaidCents / 100,
+    fee: v.fee,
+    cost: now.totalPaidCents / 100 + v.fee,
+    payoff,
+    count: now.count,
+    savedInterest: (base.totalInterestCents - now.totalInterestCents) / 100,
+    savedMonths: base.count - now.count,
+    extra: v.extra,
+    baseRows: base.rows,
+    nowRows: now.rows,
+    start: v.start,
+  };
+  render();
+}
+
+function render() {
+  const s = lastSummary;
+  if (!s) return;
+  $('outMonthly').textContent = money(s.monthly);
+  $('outInterest').textContent = money(s.interest);
+  $('outPaid').textContent = money(s.paid);
+  $('outCost').textContent = money(s.cost);
+  $('outPayoff').textContent = dateLong(s.payoff);
+  $('outCount').textContent = new Intl.NumberFormat(LOCALE).format(s.count);
+  if (s.extra > 0 && (s.savedInterest > 0 || s.savedMonths > 0)) {
+    const parts = [];
+    if (s.savedInterest > 0) parts.push(`${money(s.savedInterest)} less interest`);
+    if (s.savedMonths > 0) parts.push(`${s.savedMonths} months sooner`);
+    $('outSaving').textContent = 'Saved with extra payments: ' + parts.join(', ') + '.';
+  } else {
+    $('outSaving').textContent = 'Add an extra payment to see savings.';
+  }
+  drawChart(s);
+  renderTable(s);
+}
+
+function drawChart(s) {
+  const W = 582, H = 200, X0 = 48, Y0 = 10;
+  const total = s.principal;
+  const toPoints = rows => {
+    const pts = [`${X0},${Y0}`];
+    const longest = Math.max(s.baseRows.length, s.nowRows.length, 1);
+    rows.forEach((row, i) => {
+      const x = X0 + ((i + 1) / longest) * W;
+      const y = Y0 + H - (row.balance / 100 / total) * H;
+      pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    });
+    return pts.join(' ');
+  };
+  $('lineBase').setAttribute('points', s.extra > 0 ? toPoints(s.baseRows) : '');
+  $('lineNow').setAttribute('points', toPoints(s.nowRows));
+  $('chartMax').textContent = money(total);
+  $('chartEnd').textContent = `${s.count} / ${s.baseRows.length}`;
+}
+
+function renderTable(s) {
+  const body = $('scheduleBody');
+  const frag = document.createDocumentFragment();
+  const nf = new Intl.NumberFormat(LOCALE, { style: 'currency', currency: state.currency });
+  s.nowRows.forEach(row => {
+    const tr = document.createElement('tr');
+    const date = addMonths(s.start, row.n);
+    [String(row.n), dateLong(date), nf.format(row.payment / 100), row.extra ? nf.format(row.extra / 100) : '–',
+      nf.format(row.principal / 100), nf.format(row.interest / 100), nf.format(row.balance / 100)].forEach(text => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      tr.appendChild(td);
+    });
+    frag.appendChild(tr);
+  });
+  body.replaceChildren(frag);
+}
+
+function downloadCsv() {
+  if (!lastSummary) return;
+  const sched = { rows: lastSummary.nowRows };
+  const blob = new Blob([scheduleToCsv(sched, lastSummary.start)], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'loan-schedule.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setStatus('CSV downloaded.');
+}
+
+function printPdf() {
+  if (!lastSummary) return;
+  const s = lastSummary;
+  const nf = new Intl.NumberFormat(LOCALE, { style: 'currency', currency: state.currency });
+  const summaryLines = [
+    `Monthly payment: ${money(s.monthly)}`,
+    `Annual rate: ${s.rate}%`,
+    `Total interest: ${money(s.interest)}`,
+    `Total repaid: ${money(s.paid)}`,
+    `Final payment: ${dateLong(s.payoff)}`,
+    `Payments: ${s.count}`,
+    `Currency label: ${state.currency} (display only)`
+  ];
+  const rows = s.nowRows.map(row => ({
+    n: row.n,
+    date: dateLong(addMonths(s.start, row.n)),
+    payment: nf.format(row.payment / 100),
+    extra: row.extra ? nf.format(row.extra / 100) : '–',
+    principal: nf.format(row.principal / 100),
+    interest: nf.format(row.interest / 100),
+    balance: nf.format(row.balance / 100),
+  }));
+  const html = buildPrintDocument({ title: 'Loan amortization schedule', summaryLines, rows });
+  const w = window.open('', '_blank', 'noopener,noreferrer');
+  if (!w) {
+    setStatus('Pop-up blocked. Allow pop-ups to print or save as PDF.', true);
+    return;
+  }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  w.onload = () => { w.print(); };
+  setStatus('Use your browser print dialog to save as PDF.');
+}
+
+async function copySummary() {
+  if (!lastSummary) return;
+  const s = lastSummary;
+  const text = [
+    `Monthly payment: ${money(s.monthly)}`,
+    `Total interest: ${money(s.interest)}`,
+    `Total repaid: ${money(s.paid)}`,
+    `Total cost: ${money(s.cost)}`,
+    `Final payment: ${dateLong(s.payoff)}`,
+    `Payments: ${s.count}`,
+  ].join('\n');
+  try {
+    await navigator.clipboard.writeText(text);
+    setStatus('Summary copied.');
+  } catch {
+    setStatus('Copy failed. Select the text manually.', true);
+  }
+}
+
+function resetForm() {
+  ['amount', 'rate', 'termValue', 'extra', 'fee'].forEach(id => { $(id).value = id === 'extra' || id === 'fee' ? '0' : ''; });
+  $('termUnit').value = 'years';
+  $('start').value = isoDate(new Date());
+  $('currency').value = state.currency;
+  savePrefs();
+  recalc();
+}
+
+function savePrefs() {
+  try { localStorage.setItem(KEY, JSON.stringify({ theme: state.theme, currency: state.currency })); } catch {}
+}
+function setTheme(value) {
+  state.theme = value === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = state.theme;
+  $('themeColor').content = state.theme === 'dark' ? '#0d1920' : '#0f766e';
+  $('themeToggle').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  savePrefs();
+}
+
+function init() {
+  let saved;
+  try { saved = JSON.parse(localStorage.getItem(KEY)); } catch {}
+  state.theme = saved?.theme === 'dark' ? 'dark' : (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  state.currency = CURRENCIES.includes(saved?.currency) ? saved.currency : 'USD';
+  $('currency').value = state.currency;
+  $('start').value = isoDate(new Date());
+  setTheme(state.theme);
+  $('themeToggle').addEventListener('click', () => setTheme(state.theme === 'dark' ? 'light' : 'dark'));
+  ['amount', 'rate', 'termValue', 'termUnit', 'start', 'extra', 'fee'].forEach(id => $(id).addEventListener('input', recalc));
+  $('termUnit').addEventListener('change', recalc);
+  $('currency').addEventListener('change', e => { state.currency = e.target.value; savePrefs(); recalc(); });
+  $('resetBtn').addEventListener('click', resetForm);
+  $('copyBtn').addEventListener('click', copySummary);
+  $('csvBtn').addEventListener('click', downloadCsv);
+  $('pdfBtn').addEventListener('click', printPdf);
+  clearResults();
+}
+
+init();
+</script>
+<script src="/js/ads.js" defer></script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

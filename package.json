@@ -1,0 +1,7 @@
+{
+  "name": "free-loan-calculator",
+  "private": true,
+  "scripts": {
+    "test": "node tests/loan.test.cjs"
+  }
+}
