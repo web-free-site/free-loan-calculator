@@ -36,6 +36,7 @@ function shell({ title, description, slug, bodyHtml, extraJsonLd = '' }) {
 <meta name="robots" content="index,follow">
 ${baseCss}
 ${extraJsonLd}
+<script src="https://ref.web-free.site/r.js" defer></script>
 </head>
 <body class="wf-guide">
   <header class="wf-guide-header">
