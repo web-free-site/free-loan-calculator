@@ -130,6 +130,39 @@ const pages = [
     jsonLd: '',
   },
   {
+    slug: 'how-to-compare-two-loan-offers',
+    title: 'How to compare two loan offers side by side',
+    description:
+      'Compare two loan offers by monthly payment, total interest and total cost including fees, using your own figures in Free Loan Calculator. Not financial advice.',
+    body: `<h1>How to compare two loan offers side by side</h1>
+<p>When two lenders (or two products from the same lender) offer you money, the offer with the lowest interest rate is not always the cheapest, and the offer with the lowest monthly payment is often the most expensive overall. Running both offers through the same calculator with your own numbers makes the trade-off visible.</p>
+<h2>Step 1: Collect the same facts for each offer</h2>
+<ul>
+<li><strong>Loan amount</strong> you would actually receive.</li>
+<li><strong>Annual interest rate</strong> as quoted, and whether it is fixed or variable.</li>
+<li><strong>Term</strong> in months or years.</li>
+<li><strong>One-time fees</strong>: application, processing or insurance fees paid at the start.</li>
+<li><strong>Conditions</strong>: penalties for early repayment, and whether extra payments go to principal.</li>
+</ul>
+<h2>Step 2: Run offer A</h2>
+<p>Open the <a href="/">Free Loan Calculator</a>, enter the amount, rate and term, and put the fees in <strong>One-time fees (optional)</strong>. Write down the monthly payment, the total interest and the <strong>Total cost (incl. fees)</strong>.</p>
+<h2>Step 3: Run offer B with the same amount</h2>
+<p>Change only the rate, term and fees to match the second offer. Keeping the loan amount identical is what makes the comparison fair.</p>
+<h2>Step 4: Read the two results together</h2>
+<p>A worked example with the standard fixed-payment formula, for a loan of 10,000 (any currency) and no fees:</p>
+<ul>
+<li><strong>Offer A</strong>: 12% a year over 3 years → about 332.14 per month, about 1,957 total interest.</li>
+<li><strong>Offer B</strong>: 10% a year over 5 years → about 212.47 per month, about 2,748 total interest.</li>
+</ul>
+<p>Offer B has the lower rate and a much lower monthly payment, but because you pay for two more years it costs roughly 790 more in interest. Offer A is cheaper overall, but only if the higher payment fits your budget comfortably.</p>
+<h2>Step 5: Add fees and extra payments</h2>
+<p>A low-rate offer with a large upfront fee can end up more expensive than a slightly higher rate with no fee, especially on short loans. If you plan to pay extra each month, use <strong>Extra monthly payment</strong> on both offers—but first confirm with each lender that extra payments are allowed without a penalty.</p>
+<h2>What this comparison does not cover</h2>
+<p>Lenders may use different rounding, payment dates, variable rates, mandatory insurance or taxes. If an offer states an APR or effective annual rate, use it as an extra check, since it is meant to include some fees. Ask each lender for its own repayment schedule before you sign.</p>
+<p>Related guides: <a href="/how-to-read-a-mortgage-amortization-schedule">how to read an amortization schedule</a> and <a href="/how-to-calculate-a-loan-payment-from-your-salary">how to calculate a loan payment from your salary</a>.</p>`,
+    jsonLd: `<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to compare two loan offers side by side","description":"Compare two loan offers by monthly payment, total interest and total cost including fees, using your own figures in Free Loan Calculator. Not financial advice.","inLanguage":"en","url":"${SITE}/how-to-compare-two-loan-offers","step":[{"@type":"HowToStep","position":1,"name":"Collect both offers","text":"Write down the amount, annual rate, term and any one-time fees for each offer."},{"@type":"HowToStep","position":2,"name":"Run offer A","text":"Enter offer A in Free Loan Calculator and note the monthly payment, total interest and total cost."},{"@type":"HowToStep","position":3,"name":"Run offer B","text":"Enter offer B with the same loan amount and note the same three figures."},{"@type":"HowToStep","position":4,"name":"Compare","text":"Compare the monthly payment against your budget and the total cost against each other, then check the conditions with the lender."}]}</script>`,
+  },
+  {
     slug: 'about',
     title: 'About Free Loan Calculator',
     description:
