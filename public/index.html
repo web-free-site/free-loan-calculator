@@ -296,7 +296,8 @@ function buildPrintDocument(meta) {
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const rows = meta.rows.map(r => `<tr><td>${r.n}</td><td>${esc(r.date)}</td><td>${esc(r.payment)}</td><td>${esc(r.extra)}</td><td>${esc(r.principal)}</td><td>${esc(r.interest)}</td><td>${esc(r.balance)}</td></tr>`).join('');
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(meta.title)}</title>
-<style>body{font:12px/1.4 system-ui,sans-serif;color:#111;margin:16px}h1{font-size:18px}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid #ccc;padding:4px 6px;text-align:right}th,td:nth-child(1),td:nth-child(2){text-align:left}th{background:#f4f4f4}.meta{margin:8px 0}.note{font-size:11px;color:#444;margin-top:14px}</style></head><body>
+<style>body{font:12px/1.4 system-ui,sans-serif;color:#111;margin:16px}h1{font-size:18px}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid #ccc;padding:4px 6px;text-align:right}th,td:nth-child(1),td:nth-child(2){text-align:left}th{background:#f4f4f4}.meta{margin:8px 0}.note{font-size:11px;color:#444;margin-top:14px}</style><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-8DG5MK8YPM"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-8DG5MK8YPM');</script>
+</head><body>
 <h1>${esc(meta.title)}</h1>
 <div class="meta">${meta.summaryLines.map(l => `<div>${esc(l)}</div>`).join('')}</div>
 <table><thead><tr><th>No.</th><th>Date</th><th>Payment</th><th>Extra</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table>
